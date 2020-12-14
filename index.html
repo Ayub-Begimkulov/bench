@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div>Hello world</div>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.20/lodash.min.js"
+      integrity="sha512-90vH1Z83AJY9DmlWa8WkjkV79yfS2n2Oxhsi2dZbIv0nC4E6m5AbH8Nh156kkM7JePmqD6tcZsfad1ueoaovww=="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/platform/1.3.6/platform.min.js"
+      integrity="sha512-eYPrm8TgYWg3aa6tvSRZjN4v0Z9Qx69q3RhfSj+Mf89QqwOMqmwSlsVqfp4N8NVAcZe/YeUhh9x/nM2CAOp6cA=="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/benchmark/2.1.4/benchmark.min.js"
+      integrity="sha512-xQc9DgKsysVXOYCdYCygJIizr64rtYYmNcOv4iKCBJw/xvuiaeG7FIwrkXuCgJg4U7oTqqNpknbC6eyc0NSREg=="
+      crossorigin="anonymous"
+    ></script>
+    <script type="module">
+      function runBench(...suites) {
+        const suite = Benchmark.Suite();
+        suites.forEach(({ name, run }) => {
+          suite.add(name, run);
+        });
+        suite
+          .on("cycle", event => {
+            console.log(String(event.target));
+          })
+          .on("complete", () => {
+            console.log("Fastest is " + suite.filter("fastest").map("name"));
+          })
+          .run({ async: true });
+      }
+
+      const ITERATIONS = 10_000;
+
+      const setAdd = () => {
+        const set = new Set();
+        for (let i = 0; i < ITERATIONS; i++) {
+          set.add(i);
+        }
+        return set;
+      };
+
+      const arrayPush = () => {
+        const arr = [];
+        for (let i = 0; i < ITERATIONS; i++) {
+          arr.push(i);
+        }
+        return arr;
+      };
+
+      const rand = () => Math.floor(Math.random() * (ITERATIONS + 1));
+
+      // runBench(
+      //   { name: "Set.add", run: setAdd },
+      //   { name: "Array.push", run: arrayPush }
+      // );
+
+      const setHas = () => {
+        const set = setAdd();
+        for (let i = 0; i < ITERATIONS; i++) {
+          set.has(rand());
+        }
+      };
+
+      const arrayIncludes = () => {
+        const arr = arrayPush();
+        for (let i = 0; i < ITERATIONS; i++) {
+          arr.includes(rand());
+        }
+      };
+
+      // runBench(
+      //   { name: "Set.has", run: setHas },
+      //   { name: "Array.includes", run: arrayIncludes }
+      // );
+
+      const set = setAdd();
+
+      const setDelete = () => {
+        for (let i = 0; i < ITERATIONS; i++) {
+          set.delete(rand());
+        }
+      };
+
+      const arr = arrayPush();
+
+      const arraySplice = () => {
+        for (let i = 0; i < ITERATIONS; i++) {
+          arr.splice(arr.indexOf(rand()), 1);
+        }
+      };
+
+      // runBench(
+      //   { name: "Set.delete", run: setDelete },
+      //   { name: "Array.splice + Array.indexOf", run: arraySplice }
+      // );
+
+      const set2 = setAdd();
+
+      const setForEach = () => {
+        set2.forEach(v => v);
+      };
+
+      const arr2 = arrayPush();
+
+      const arrForEach = () => {
+        arr2.forEach(v => v);
+      };
+
+      runBench(
+        { name: "Set.forEach", run: setForEach },
+        { name: "Array.forEach", run: arrForEach }
+      );
+    </script>
+  </body>
+</html>
