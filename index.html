@@ -37,87 +37,42 @@
           })
           .run({ async: true });
       }
-
-      const ITERATIONS = 10_000;
-
-      const setAdd = () => {
-        const set = new Set();
-        for (let i = 0; i < ITERATIONS; i++) {
-          set.add(i);
-        }
-        return set;
+      const ITERATIONS = 1_000;
+      const el = document.createElement("div");
+      const el2 = document.createElement("div");
+      const classes = [];
+      for (let i = 0; i < 20; i++) {
+        classes[i] = "" + Math.random();
+      }
+      const addClass1 = (el, ...classes) => {
+        classes.forEach(c => el.classList.add(c));
       };
-
-      const arrayPush = () => {
-        const arr = [];
-        for (let i = 0; i < ITERATIONS; i++) {
-          arr.push(i);
-        }
-        return arr;
+      const addClass2 = (el, classes) => {
+        el.classList.add(classes);
       };
-
-      const rand = () => Math.floor(Math.random() * (ITERATIONS + 1));
-
-      // runBench(
-      //   { name: "Set.add", run: setAdd },
-      //   { name: "Array.push", run: arrayPush }
-      // );
-
-      const setHas = () => {
-        const set = setAdd();
-        for (let i = 0; i < ITERATIONS; i++) {
-          set.has(rand());
-        }
-      };
-
-      const arrayIncludes = () => {
-        const arr = arrayPush();
-        for (let i = 0; i < ITERATIONS; i++) {
-          arr.includes(rand());
-        }
-      };
-
-      // runBench(
-      //   { name: "Set.has", run: setHas },
-      //   { name: "Array.includes", run: arrayIncludes }
-      // );
-
-      const set = setAdd();
-
-      const setDelete = () => {
-        for (let i = 0; i < ITERATIONS; i++) {
-          set.delete(rand());
-        }
-      };
-
-      const arr = arrayPush();
-
-      const arraySplice = () => {
-        for (let i = 0; i < ITERATIONS; i++) {
-          arr.splice(arr.indexOf(rand()), 1);
-        }
-      };
-
-      // runBench(
-      //   { name: "Set.delete", run: setDelete },
-      //   { name: "Array.splice + Array.indexOf", run: arraySplice }
-      // );
-
-      const set2 = setAdd();
-
-      const setForEach = () => {
-        set2.forEach(v => v);
-      };
-
-      const arr2 = arrayPush();
-
-      const arrForEach = () => {
-        arr2.forEach(v => v);
-      };
-
       runBench(
-        { name: "Set.forEach", run: setForEach },
-        { name: "Array.forEach", run: arrForEach }
+        {
+          name: "spread",
+          run: () => {
+            addClass1(el2, classes.slice(1, 11));
+          },
+        },
+        {
+          name: "separate",
+          run: () => {
+            addClass2(el, classes[1]);
+            addClass2(el, classes[2]);
+            addClass2(el, classes[3]);
+            addClass2(el, classes[4]);
+            addClass2(el, classes[5]);
+            addClass2(el, classes[6]);
+            addClass2(el, classes[7]);
+            addClass2(el, classes[8]);
+            addClass2(el, classes[9]);
+            addClass2(el, classes[10]);
+            addClass2(el, classes[11]);
+          },
+        }
       );
     </script>
   </body>
