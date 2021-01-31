@@ -7,12 +7,13 @@ function hasOwn(value, key) {
 }
 
 function reduceObject(obj, reducer, initialState) {
+  let result = initialState;
   for (const key in obj) {
     if (hasOwn(obj, key)) {
-      reducer(initialState, obj[key], key, obj);
+      result = reducer(result, obj[key], key, obj);
     }
   }
-  return initialState;
+  return result;
 }
 
 function mapObject(obj, mapper) {
@@ -45,7 +46,7 @@ runBench(
         testObj,
         (acc, value) => {
           acc.push(value);
-          return value;
+          return acc;
         },
         []
       );
