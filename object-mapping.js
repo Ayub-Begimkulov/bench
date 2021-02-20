@@ -1,4 +1,4 @@
-import { runBench } from "./run-bench.js";
+import { runBench } from "./utils/run-bench.js";
 
 const hasOwnProperty = Object.prototype.hasOwnProperty;
 

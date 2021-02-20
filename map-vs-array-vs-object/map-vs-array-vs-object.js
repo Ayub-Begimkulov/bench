@@ -1,4 +1,4 @@
-import { runBench } from "./run-bench.js";
+import { runBench } from "../utils/run-bench.js";
 
 const ITERATIONS = 10_000;
 
@@ -66,14 +66,12 @@ const arr2 = createArray();
 
 const arraySplice = () => {
   for (let i = 0; i < ITERATIONS; i++) {
-    const idx = arr.indexOf("$" + rand());
+    const idx = arr2.indexOf("$" + rand());
     if (idx > -1) {
       arr2.splice(idx, 1);
     }
   }
 };
-
-arraySplice();
 
 runBench(
   { name: "Map.delete", run: mapDelete },
@@ -92,7 +90,7 @@ const arrForEach = () => {
   arr3.forEach(v => v);
 };
 
-// runBench(
-//   { name: "Map.forEach", run: mapForEach },
-//   { name: "Array.forEach", run: arrForEach }
-// );
+runBench(
+  { name: "Map.forEach", run: mapForEach },
+  { name: "Array.forEach", run: arrForEach }
+);

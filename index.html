@@ -22,7 +22,7 @@
       integrity="sha512-xQc9DgKsysVXOYCdYCygJIizr64rtYYmNcOv4iKCBJw/xvuiaeG7FIwrkXuCgJg4U7oTqqNpknbC6eyc0NSREg=="
       crossorigin="anonymous"
     ></script>
-    <script type="module">
+    <script>
       function runBench(...suites) {
         const suite = Benchmark.Suite();
         suites.forEach(({ name, run }) => {
@@ -37,43 +37,45 @@
           })
           .run({ async: true });
       }
-      const ITERATIONS = 1_000;
-      const el = document.createElement("div");
-      const el2 = document.createElement("div");
-      const classes = [];
-      for (let i = 0; i < 20; i++) {
-        classes[i] = "" + Math.random();
-      }
-      const addClass1 = (el, ...classes) => {
-        classes.forEach(c => el.classList.add(c));
-      };
-      const addClass2 = (el, classes) => {
-        el.classList.add(classes);
-      };
+    </script>
+    <script type="module">
+      const rand = () => Math.floor(Math.random() * (ITERATIONS + 1));
+
+      const ITERATIONS = 1000;
+
       runBench(
         {
-          name: "spread",
-          run: () => {
-            addClass1(el2, classes.slice(1, 11));
+          name: "qs",
+          run() {
+            for (let i = 0; i < ITERATIONS; i++) {
+              document.querySelectorAll("div");
+            }
           },
         },
         {
-          name: "separate",
-          run: () => {
-            addClass2(el, classes[1]);
-            addClass2(el, classes[2]);
-            addClass2(el, classes[3]);
-            addClass2(el, classes[4]);
-            addClass2(el, classes[5]);
-            addClass2(el, classes[6]);
-            addClass2(el, classes[7]);
-            addClass2(el, classes[8]);
-            addClass2(el, classes[9]);
-            addClass2(el, classes[10]);
-            addClass2(el, classes[11]);
+          name: "walker",
+          run() {
+            for (let i = 0; i < ITERATIONS; i++) {
+              findAll();
+            }
           },
         }
       );
+
+      function findAll() {
+        const treeWalker = document.createTreeWalker(
+          document.body,
+          NodeFilter.SHOW_ELEMENT
+        );
+        const result = [];
+        let current = null;
+        while ((current = treeWalker.nextNode())) {
+          if (current instanceof HTMLDivElement) {
+            result.push(current);
+          }
+        }
+        return result;
+      }
     </script>
   </body>
 </html>

@@ -1,5 +1,5 @@
 import { observable, action, autorun } from "mobx";
-import { runBench } from "../run-bench.js";
+import { runBench } from "../utils/run-bench.js";
 
 const ITERATIONS = 1_00;
 
